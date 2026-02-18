@@ -321,13 +321,13 @@ class Formula:
                 return Formula(s[0], formula), remainder
 
             operator = None
-            if len(s) >= 2 and is_binary(s[:2]):
-                operator = s[:2]
-                remainder = s[2:]
-            elif is_binary(s[0]):
-                operator = s[0]
-                remainder = s[1:]
-            else:
+            for op in ['<->', '->', '-&', '-|', '&', '|', '+']:
+                if s.startswith(op):
+                    operator = op
+                    remainder = s[len(op):]
+                    break
+
+            if operator is None:
                 return None, 'Invalid formula'
 
             first, remainder = parse_prefix(remainder)
